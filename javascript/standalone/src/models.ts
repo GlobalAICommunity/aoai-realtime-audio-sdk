@@ -6,7 +6,7 @@ export type AzureStandardVoice = {
   name: string;
   temperature?: number;
   custom_lexicon_url?: string;
-  prefer_locales?: string;
+  prefer_locales?: string[];
 }
 export type AzureCustomVoice = {
   type: "azure-custom";
@@ -14,7 +14,7 @@ export type AzureCustomVoice = {
   endpoint_id: string;
   temperature?: number;
   custom_lexicon_url?: string;
-  prefer_locales?: string;
+  prefer_locales?: string[];
 }
 export type Voice =
   | 'alloy'
