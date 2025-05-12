@@ -94,10 +94,15 @@ export function voiceAgentSettings(
     uri.searchParams.set("model", options.modelOrAgent);
   } else {
     uri.searchParams.set("agent_id", options.modelOrAgent.agentId);
-    uri.searchParams.set(
-      "agent_connection_string",
-      options.modelOrAgent.agentConnectionString,
-    );
+    if (options.modelOrAgent.projectName) {
+      uri.searchParams.set("agent-project-name", options.modelOrAgent.projectName);
+    }
+    if (options.modelOrAgent.agentConnectionString) {
+      uri.searchParams.set(
+        "agent_connection_string",
+        options.modelOrAgent.agentConnectionString,
+      );
+    }
     if (options.modelOrAgent.agentAuthenticationIdentityClientId) {
       uri.searchParams.set(
         "agent_authentication_identity_client_id",
