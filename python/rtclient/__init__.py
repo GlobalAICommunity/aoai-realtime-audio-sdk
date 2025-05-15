@@ -312,8 +312,10 @@ class RTTextContent:
         assert message.part.type == "text"
         self._part = message.part
         self.__queue = queue
-        self.__content_queue = MessageQueueWithError(
-            self._receive_content, lambda m: m.type == "response.content_part.done"
+        self.__content_queue = SharedEndQueue(
+            self._receive_content,
+            lambda m: m.type == "error",
+            lambda m: m.type == "response.content_part.done",
         )
 
     async def _receive_content(self):
