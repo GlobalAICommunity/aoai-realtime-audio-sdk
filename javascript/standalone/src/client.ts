@@ -55,7 +55,7 @@ import {
 import {
   azureOpenAISettings,
   openAISettings,
-  voiceAgentSettings,
+  voiceLiveSettings,
 } from "./util/connection-settings";
 import { MessageQueueWithError, SharedEndQueue } from "./util/message_queue";
 import { generateId } from "./util/crypto";
@@ -127,7 +127,7 @@ export class LowLevelRTClient {
         isCredential(credentialOrOptions) &&
         isRTVoiceAgentOptions(options)
       ) {
-        return voiceAgentSettings(
+        return voiceLiveSettings(
           uriOrCredential as URL,
           credentialOrOptions,
           options as RTVoiceAgentOptions,

@@ -67,7 +67,7 @@ export function azureOpenAISettings(
 }
 
 
-export function voiceAgentSettings(
+export function voiceLiveSettings(
   uri: URL,
   credential: KeyCredential | TokenCredential,
   options: RTVoiceAgentOptions,
@@ -107,7 +107,7 @@ export function voiceAgentSettings(
       uri.searchParams.set("agent_thread_id", options.modelOrAgent.threadId);
     }
   }
-  uri.pathname = options.path ?? "voice-agent/realtime";
+  uri.pathname = options.path ?? "voice-live/realtime";
   return {
     uri,
     headers: {
