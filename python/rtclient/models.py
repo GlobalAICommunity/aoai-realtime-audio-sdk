@@ -28,9 +28,18 @@ class ServerVAD(ModelWithDefaults):
     threshold: Optional[Annotated[float, Field(strict=True, ge=0.0, le=1.0)]] = None
     prefix_padding_ms: Optional[int] = None
     silence_duration_ms: Optional[int] = None
+    create_response: bool = True
+    interrupt_response: bool = True
 
 
-TurnDetection = Annotated[Union[NoTurnDetection, ServerVAD], Field(discriminator="type")]
+class SemanticVAD(ModelWithDefaults):
+    type: Literal["semantic_vad"] = "semantic_vad"
+    eagerness: Literal["low", "medium", "high", "auto"] = "auto"
+    create_response: bool = True
+    interrupt_response: bool = True
+
+
+TurnDetection = Annotated[Union[NoTurnDetection, ServerVAD, SemanticVAD], Field(discriminator="type")]
 
 
 class FunctionToolChoice(ModelWithDefaults):
