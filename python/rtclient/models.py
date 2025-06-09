@@ -705,6 +705,8 @@ def create_message_from_dict(data: dict) -> ServerMessageType:
             return ItemDeletedMessage(**data)
         case "conversation.item.input_audio_transcription.completed":
             return ItemInputAudioTranscriptionCompletedMessage(**data)
+        case "conversation.item.input_audio_transcription.delta":
+            return ItemInputAudioTranscriptionDeltaMessage(**data)
         case "conversation.item.input_audio_transcription.failed":
             return ItemInputAudioTranscriptionFailedMessage(**data)
         case "response.created":
