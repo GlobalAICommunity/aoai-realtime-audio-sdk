@@ -428,6 +428,13 @@ class ItemInputAudioTranscriptionCompletedMessage(ServerMessageBase):
     content_index: int
     transcript: str
 
+class ItemInputAudioTranscriptionDeltaMessage(ServerMessageBase):
+    type: Literal["conversation.item.input_audio_transcription.delta"] = (
+        "conversation.item.input_audio_transcription.delta"
+    )
+    item_id: str
+    content_index: int
+    delta: str
 
 class ItemInputAudioTranscriptionFailedMessage(ServerMessageBase):
     type: Literal["conversation.item.input_audio_transcription.failed"] = (
