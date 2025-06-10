@@ -53,7 +53,9 @@ MessageRole = Literal["system", "assistant", "user"]
 
 
 class InputAudioTranscription(BaseModel):
-    model: Literal["whisper-1"]
+    model: Literal["whisper-1", "gpt-4o-transcribe", "gpt-4o-mini-transcribe"]
+    language: Optional[str] = None
+    prompt: Optional[str] = None
 
 
 class ClientMessageBase(ModelWithDefaults):
@@ -420,6 +422,15 @@ class ItemDeletedMessage(ServerMessageBase):
     item_id: str
 
 
+class ItemInputAudioTranscriptionDeltaMessage(ServerMessageBase):
+    type: Literal["conversation.item.input_audio_transcription.delta"] = (
+        "conversation.item.input_audio_transcription.delta"
+    )
+    item_id: str
+    content_index: int
+    delta: str
+
+
 class ItemInputAudioTranscriptionCompletedMessage(ServerMessageBase):
     type: Literal["conversation.item.input_audio_transcription.completed"] = (
         "conversation.item.input_audio_transcription.completed"
@@ -428,13 +439,6 @@ class ItemInputAudioTranscriptionCompletedMessage(ServerMessageBase):
     content_index: int
     transcript: str
 
-class ItemInputAudioTranscriptionDeltaMessage(ServerMessageBase):
-    type: Literal["conversation.item.input_audio_transcription.delta"] = (
-        "conversation.item.input_audio_transcription.delta"
-    )
-    item_id: str
-    content_index: int
-    delta: str
 
 class ItemInputAudioTranscriptionFailedMessage(ServerMessageBase):
     type: Literal["conversation.item.input_audio_transcription.failed"] = (
@@ -703,10 +707,10 @@ def create_message_from_dict(data: dict) -> ServerMessageType:
             return ItemTruncatedMessage(**data)
         case "conversation.item.deleted":
             return ItemDeletedMessage(**data)
-        case "conversation.item.input_audio_transcription.completed":
-            return ItemInputAudioTranscriptionCompletedMessage(**data)
         case "conversation.item.input_audio_transcription.delta":
             return ItemInputAudioTranscriptionDeltaMessage(**data)
+        case "conversation.item.input_audio_transcription.completed":
+            return ItemInputAudioTranscriptionCompletedMessage(**data)
         case "conversation.item.input_audio_transcription.failed":
             return ItemInputAudioTranscriptionFailedMessage(**data)
         case "response.created":
