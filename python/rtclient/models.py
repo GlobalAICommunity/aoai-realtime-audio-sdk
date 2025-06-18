@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+import logging
 from typing import Annotated, Any, Literal, Optional, Union
 
 from pydantic import (
@@ -13,6 +14,8 @@ from pydantic import (
 )
 
 from rtclient.util.model_helpers import ModelWithDefaults
+
+logger = logging.getLogger(__name__)
 
 Voice = Literal["alloy", "ash", "ballad", "coral", "echo", "sage", "shimmer", "verse"]
 AudioFormat = Literal["pcm16", "g711-ulaw", "g711-alaw"]
@@ -63,7 +66,7 @@ class ClientMessageBase(ModelWithDefaults):
     event_id: Optional[str] = None
 
 
-Temperature = Annotated[float, Field(strict=True, ge=0.6, le=1.2)]
+Temperature = Annotated[float, Field(strict=True, ge=0.0, le=2.0)]
 ToolsDefinition = list[Any]
 
 MaxTokensType = Union[int, Literal["inf"]]
@@ -635,6 +638,9 @@ class RateLimitsUpdatedMessage(ServerMessageBase):
     type: Literal["rate_limits.updated"] = "rate_limits.updated"
     rate_limits: list[RateLimits]
 
+class UnknownServerMessageBase(ServerMessageBase):
+    type: Literal["unknown"] = "unknown"
+
 
 UserMessageType = Annotated[
     Union[
@@ -679,6 +685,7 @@ ServerMessageType = Annotated[
         ResponseFunctionCallArgumentsDeltaMessage,
         ResponseFunctionCallArgumentsDoneMessage,
         RateLimitsUpdatedMessage,
+        UnknownServerMessageBase,
     ],
     Field(discriminator="type"),
 ]
@@ -744,4 +751,5 @@ def create_message_from_dict(data: dict) -> ServerMessageType:
         case "rate_limits.updated":
             return RateLimitsUpdatedMessage(**data)
         case _:
-            raise ValueError(f"Unknown event type: {event_type}")
+            logger.error(f"Unknown message type: {event_type}. Data: {data}")
+            return UnknownServerMessageBase()
