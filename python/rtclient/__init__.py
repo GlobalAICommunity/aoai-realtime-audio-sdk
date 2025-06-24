@@ -581,8 +581,10 @@ class RTClient:
         key_credential: Optional[AzureKeyCredential] = None,
         model: Optional[str] = None,
         azure_deployment: Optional[str] = None,
+        extra_headers: Optional[dict[str, str]] = None,
+        extra_params: Optional[dict[str, str]] = None,
     ):
-        self._client = RTLowLevelClient(url, token_credential, key_credential, model, azure_deployment)
+        self._client = RTLowLevelClient(url, token_credential, key_credential, model, azure_deployment, extra_headers, extra_params)
 
         self._message_queue = MessageQueueWithError(self._receive_message, lambda m: m.type == "error")
 
