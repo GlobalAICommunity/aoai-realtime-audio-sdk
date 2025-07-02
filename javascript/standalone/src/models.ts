@@ -84,6 +84,7 @@ export interface InputAudioTranscription {
   model: "whisper-1" | "gpt-4o-transcribe" | "gpt-4o-mini-transcribe" | "azure-fast-transcription";
   language?: string;
   prompt?: string;
+  phrase_list?: string[];
 }
 
 export interface AvatarConfigVideoParams {
