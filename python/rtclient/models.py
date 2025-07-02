@@ -18,7 +18,7 @@ from rtclient.util.model_helpers import ModelWithDefaults
 logger = logging.getLogger(__name__)
 
 Voice = Literal["alloy", "ash", "ballad", "coral", "echo", "sage", "shimmer", "verse"]
-AudioFormat = Literal["pcm16", "g711-ulaw", "g711-alaw"]
+AudioFormat = Literal["pcm16", "g711_ulaw", "g711_alaw"]
 Modality = Literal["text", "audio"]
 
 
