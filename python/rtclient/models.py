@@ -215,6 +215,11 @@ class ItemCreateMessage(ClientMessageBase):
     item: Item
 
 
+class ItemRetrieveMessage(ClientMessageBase):
+    type: Literal["conversation.item.retrieve"] = "conversation.item.retrieve"
+    item_id: str
+
+
 class ItemTruncateMessage(ClientMessageBase):
     type: Literal["conversation.item.truncate"] = "conversation.item.truncate"
     item_id: str
@@ -410,6 +415,11 @@ ResponseItem = Annotated[
 class ItemCreatedMessage(ServerMessageBase):
     type: Literal["conversation.item.created"] = "conversation.item.created"
     previous_item_id: Optional[str]
+    item: ResponseItem
+
+
+class ItemRetrievedMessage(ServerMessageBase):
+    type: Literal["conversation.item.retrieved"] = "conversation.item.retrieved"
     item: ResponseItem
 
 
@@ -638,7 +648,7 @@ class RateLimitsUpdatedMessage(ServerMessageBase):
     type: Literal["rate_limits.updated"] = "rate_limits.updated"
     rate_limits: list[RateLimits]
 
-class UnknownServerMessageBase(ServerMessageBase):
+class UnknownServerMessage(ServerMessageBase):
     type: Literal["unknown"] = "unknown"
 
 
@@ -649,6 +659,7 @@ UserMessageType = Annotated[
         InputAudioBufferCommitMessage,
         InputAudioBufferClearMessage,
         ItemCreateMessage,
+        ItemRetrieveMessage,
         ItemTruncateMessage,
         ItemDeleteMessage,
         ResponseCreateMessage,
@@ -666,8 +677,10 @@ ServerMessageType = Annotated[
         InputAudioBufferSpeechStartedMessage,
         InputAudioBufferSpeechStoppedMessage,
         ItemCreatedMessage,
+        ItemRetrievedMessage,
         ItemTruncatedMessage,
         ItemDeletedMessage,
+        ItemInputAudioTranscriptionDeltaMessage,
         ItemInputAudioTranscriptionCompletedMessage,
         ItemInputAudioTranscriptionFailedMessage,
         ResponseCreatedMessage,
@@ -685,7 +698,7 @@ ServerMessageType = Annotated[
         ResponseFunctionCallArgumentsDeltaMessage,
         ResponseFunctionCallArgumentsDoneMessage,
         RateLimitsUpdatedMessage,
-        UnknownServerMessageBase,
+        UnknownServerMessage,
     ],
     Field(discriminator="type"),
 ]
@@ -710,6 +723,8 @@ def create_message_from_dict(data: dict) -> ServerMessageType:
             return InputAudioBufferSpeechStoppedMessage(**data)
         case "conversation.item.created":
             return ItemCreatedMessage(**data)
+        case "conversation.item.retrieved":
+            return ItemRetrievedMessage(**data)
         case "conversation.item.truncated":
             return ItemTruncatedMessage(**data)
         case "conversation.item.deleted":
@@ -752,4 +767,4 @@ def create_message_from_dict(data: dict) -> ServerMessageType:
             return RateLimitsUpdatedMessage(**data)
         case _:
             logger.error(f"Unknown message type: {event_type}. Data: {data}")
-            return UnknownServerMessageBase()
+            return UnknownServerMessage(**data)
