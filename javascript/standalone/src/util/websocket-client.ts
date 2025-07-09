@@ -78,7 +78,7 @@ export class WebSocketClient<U, D> implements AsyncIterable<D> {
   }
 
   private handleError(event: ErrorEvent) {
-    this.error = event.error || new Error('unknown error');
+    this.error = event.error || new Error('WebSocket connection error');
     while (this.receiverQueue.length > 0) {
       const [_, reject] = this.receiverQueue.shift()!;
       reject(this.error!);
