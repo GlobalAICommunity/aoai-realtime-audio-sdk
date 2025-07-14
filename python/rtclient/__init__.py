@@ -400,7 +400,8 @@ class RTMessageItem:
     async def __anext__(self):
         message = await self.__queue.receive(
             lambda m: (m.type == "response.content_part.added" and m.item_id == self.id)
-            or (m.type == "response.output_item.done" and m.item.id == self.id)
+            or (m.type == "response.output_item.done" and m.item.id == self.id),
+            error_predicate_override=lambda m: m.type == "error" and m.error.code not in {"conversation_already_has_active_response"},
         )
         if message is None:
             raise StopAsyncIteration
@@ -544,7 +545,8 @@ class RTResponse:
             raise StopAsyncIteration
         message = await self.__queue.receive(
             lambda m: (m.type == "response.done" and m.response.id == self.id)
-            or (m.type == "response.output_item.added" and m.response_id == self.id)
+            or (m.type == "response.output_item.added" and m.response_id == self.id),
+            error_predicate_override=lambda m: m.type == "error" and m.error.code not in {"conversation_already_has_active_response"},
         )
         if message is None:
             raise StopAsyncIteration
