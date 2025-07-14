@@ -148,12 +148,12 @@ class RTInputAudioItem:
         self.audio_end_ms: Optional[int] = None
         self.transcript: Optional[str] = None
         self._has_transcription = has_transcription
-        self.__queue = queue
+        self._queue = queue
 
     def __await__(self):
         async def resolve():
             while True:
-                message = await self.__queue.receive(
+                message = await self._queue.receive(
                     lambda m: (
                         m.type
                         in [
@@ -179,7 +179,7 @@ class RTInputAudioItem:
                     self.transcript = message.transcript
                     return
                 elif message.type == "conversation.item.input_audio_transcription.failed":
-                    raise RealtimeError(message.error)
+                    raise RealtimeException(message.error)
 
         return resolve().__await__()
 

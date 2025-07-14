@@ -73,7 +73,7 @@ class MessageQueue(Generic[T]):
         if found_message is not None:
             return found_message
 
-        future = asyncio.Future()
+        future: asyncio.Future[Optional[T]] = asyncio.Future()
         self.waiting_receivers.append((predicate, future))
 
         if not self.is_polling and self.poll_task is None:
@@ -94,11 +94,12 @@ class MessageQueueWithError(MessageQueue[T]):
                 future.set_result(error)
         self.waiting_receivers.clear()
 
-    async def receive(self, predicate) -> Optional[T]:
-        if self._error is not None:
+    async def receive(self, predicate: Callable[[T], bool], error_predicate_override: Callable[[T], bool] | None = None) -> Optional[T]:
+        error_predicate = error_predicate_override or self._error_predicate
+        if self._error is not None and error_predicate(self._error):
             return self._error
-        message = await super().receive(lambda m: predicate(m) or self._error_predicate(m))
-        if message is not None and self._error_predicate(message):
+        message = await super().receive(lambda m: predicate(m) or error_predicate(m))
+        if message is not None and error_predicate(message):
             self._error = message
             self._notify_error(message)
         return message
