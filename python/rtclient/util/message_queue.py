@@ -89,10 +89,10 @@ class MessageQueueWithError(MessageQueue[T]):
         self._error: Optional[T] = None
 
     def _notify_error(self, error: T):
-        for _, future in self.waiting_receivers:
-            if not future.done():
+        for i, (predicate, future) in enumerate(self.waiting_receivers):
+            if not future.done() and predicate(error):
+                del self.waiting_receivers[i]
                 future.set_result(error)
-        self.waiting_receivers.clear()
 
     async def receive(self, predicate: Callable[[T], bool], error_predicate_override: Callable[[T], bool] | None = None) -> Optional[T]:
         error_predicate = error_predicate_override or self._error_predicate
