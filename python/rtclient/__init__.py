@@ -250,7 +250,8 @@ class RTAudioContent:
             ]
 
         return await self.__queue.receive(
-            lambda m: is_valid_message(m) and m.item_id == self.item_id and m.content_index == self.content_index
+            lambda m: is_valid_message(m) and m.item_id == self.item_id and m.content_index == self.content_index,
+            error_predicate_override=lambda m: m.type == "error" and m.error.code not in {"conversation_already_has_active_response", "response_cancel_not_active"},
         )
 
     @property
@@ -335,7 +336,8 @@ class RTTextContent:
             ]
 
         return await self.__queue.receive(
-            lambda m: is_valid_message(m) and m.item_id == self.item_id and m.content_index == self.content_index
+            lambda m: is_valid_message(m) and m.item_id == self.item_id and m.content_index == self.content_index,
+            error_predicate_override=lambda m: m.type == "error" and m.error.code not in {"conversation_already_has_active_response", "response_cancel_not_active"},
         )
 
     @property
@@ -401,7 +403,7 @@ class RTMessageItem:
         message = await self.__queue.receive(
             lambda m: (m.type == "response.content_part.added" and m.item_id == self.id)
             or (m.type == "response.output_item.done" and m.item.id == self.id),
-            error_predicate_override=lambda m: m.type == "error" and m.error.code not in {"conversation_already_has_active_response"},
+            error_predicate_override=lambda m: m.type == "error" and m.error.code not in {"conversation_already_has_active_response", "response_cancel_not_active"},
         )
         if message is None:
             raise StopAsyncIteration
@@ -460,7 +462,8 @@ class RTFunctionCallItem:
                     m.type in ["response.function_call_arguments.delta", "response.function_call_arguments.done"]
                     and m.item_id == self.id
                 )
-                or (m.type == "response.output_item.done" and m.item.id == self.id)
+                or (m.type == "response.output_item.done" and m.item.id == self.id),
+                error_predicate_override=lambda m: m.type == "error" and m.error.code not in {"conversation_already_has_active_response", "response_cancel_not_active"},
             )
             if message is None:
                 break
@@ -546,7 +549,7 @@ class RTResponse:
         message = await self.__queue.receive(
             lambda m: (m.type == "response.done" and m.response.id == self.id)
             or (m.type == "response.output_item.added" and m.response_id == self.id),
-            error_predicate_override=lambda m: m.type == "error" and m.error.code not in {"conversation_already_has_active_response"},
+            error_predicate_override=lambda m: m.type == "error" and m.error.code not in {"conversation_already_has_active_response", "response_cancel_not_active"},
         )
         if message is None:
             raise StopAsyncIteration
@@ -559,7 +562,8 @@ class RTResponse:
         if message.type == "response.output_item.added":
             # TODO: This can probably be generalized and reused (similar to the input item pattern)
             created_message = await self.__queue.receive(
-                lambda m: m.type == "conversation.item.created" and m.item.id == message.item.id
+                lambda m: m.type == "conversation.item.created" and m.item.id == message.item.id,
+                error_predicate_override=lambda m: m.type == "error" and m.error.code not in {"conversation_already_has_active_response", "response_cancel_not_active"},
             )
             if created_message is None:
                 raise StopAsyncIteration
