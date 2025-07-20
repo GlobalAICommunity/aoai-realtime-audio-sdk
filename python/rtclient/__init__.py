@@ -40,6 +40,7 @@ from rtclient.models import (
     ItemParamStatus,
     ItemTruncatedMessage,
     ItemTruncateMessage,
+    MaxTokensType,
     MessageItem,
     MessageItemType,
     MessageRole,
@@ -620,7 +621,7 @@ class RTClient:
         tools: Optional[ToolsDefinition] = None,
         tool_choice: Optional[ToolChoice] = None,
         temperature: Optional[Temperature] = None,
-        max_response_output_tokens: Optional[int] = None,
+        max_response_output_tokens: Optional[MaxTokensType] = None,
     ) -> Session:
         session_update_params = SessionUpdateParams()
         if model is not None:
