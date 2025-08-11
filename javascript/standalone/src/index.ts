@@ -97,6 +97,7 @@ export {
   SystemMessageItem,
   ToolChoice,
   ToolsDefinition,
+  SystemToolDefinition,
   TurnDetection,
   Usage,
   UserContentPart,

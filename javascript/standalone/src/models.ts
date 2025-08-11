@@ -118,6 +118,11 @@ export interface ClientMessageBase {
 
 export type ToolsDefinition = Record<string, any>[];
 
+export interface SystemToolDefinition {
+  name: string;
+  description?: string;
+}
+
 export interface ServerEchoCancellation {
   type: "server_echo_cancellation";
 }
@@ -140,6 +145,7 @@ export interface SessionUpdateParams {
   input_audio_transcription?: InputAudioTranscription | null;
   turn_detection?: TurnDetection;
   tools?: ToolsDefinition;
+  system_tools?: SystemToolDefinition[];
   tool_choice?: ToolChoice;
   temperature?: number;
   max_response_output_tokens?: number;
@@ -314,6 +320,7 @@ export interface Session {
   input_audio_transcription?: InputAudioTranscription;
   turn_detection: TurnDetection;
   tools: ToolsDefinition;
+  system_tools?: SystemToolDefinition[];
   tool_choice: ToolChoice;
   temperature: number;
   max_response_output_tokens?: number;
