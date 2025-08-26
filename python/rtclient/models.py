@@ -512,11 +512,19 @@ class Usage(BaseModel):
 
 
 class Response(BaseModel):
+    object: Literal["realtime.response"] = "realtime.response"
     id: str
     status: ResponseStatus
     status_details: Optional[ResponseStatusDetails]
     output: list[ResponseItem]
     usage: Optional[Usage]
+    conversation_id: Optional[str] = None
+    modalities: set[Modality] | None = None
+    voice: Voice | None = None
+    output_audio_format: AudioFormat | None = None
+    temperature: Optional[Temperature] = None
+    max_output_tokens: Optional[MaxTokensType] = None
+    metadata: Optional[dict[str, str]] = None
 
 
 class ResponseCreatedMessage(ServerMessageBase):
