@@ -333,6 +333,8 @@ class RTTextContent:
             return m.type in [
                 "response.text.delta",
                 "response.text.done",
+                "response.output_text.delta",
+                "response.output_text.done",
                 "response.content_part.done",
             ]
 
@@ -356,7 +358,7 @@ class RTTextContent:
     async def text_chunks(self) -> AsyncGenerator[str]:
         while True:
             message = await self.__content_queue.receive(
-                lambda m: m.type in ["response.text.delta", "response.text.done"]
+                lambda m: m.type in ["response.text.delta", "response.output_text.delta", "response.text.done", "response.output_text.done"]
             )
             if message is None:
                 break
@@ -366,9 +368,9 @@ class RTTextContent:
                 break
             if message.type == "error":
                 raise RealtimeException(message.error)
-            if message.type == "response.text.delta":
+            if message.type == "response.text.delta" or message.type == "response.output_text.delta":
                 yield message.delta
-            elif message.type == "response.text.done":
+            elif message.type == "response.text.done" or message.type == "response.output_text.done":
                 # We are skipping this as it's information is already provided by 'response.content_part.done'
                 # and that is a better signal to end the iteration
                 continue
@@ -563,14 +565,14 @@ class RTResponse:
         if message.type == "response.output_item.added":
             # TODO: This can probably be generalized and reused (similar to the input item pattern)
             created_message = await self.__queue.receive(
-                lambda m: m.type == "conversation.item.created" and m.item.id == message.item.id,
+                lambda m: m.type in ("conversation.item.created", "conversation.item.added") and m.item.id == message.item.id,
                 error_predicate_override=lambda m: m.type == "error" and m.error.code not in {"conversation_already_has_active_response", "response_cancel_not_active"},
             )
             if created_message is None:
                 raise StopAsyncIteration
             if created_message.type == "error":
                 raise RealtimeException(created_message.error)
-            assert created_message.type == "conversation.item.created"
+            assert created_message.type in ("conversation.item.created", "conversation.item.added")
             if created_message.item.type == "message":
                 return RTMessageItem(self.id, created_message.item, created_message.previous_item_id, self.__queue)
             elif created_message.item.type == "function_call":
