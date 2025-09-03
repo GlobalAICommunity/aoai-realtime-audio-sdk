@@ -361,12 +361,12 @@ class ResponseItemInputAudioContentPart(BaseModel):
 
 
 class ResponseItemTextContentPart(BaseModel):
-    type: Literal["text"] = "text"
+    type: Literal["text", "output_text"] = "text"
     text: str
 
 
 class ResponseItemAudioContentPart(BaseModel):
-    type: Literal["audio"] = "audio"
+    type: Literal["audio", "output_audio"] = "audio"
     transcript: Optional[str]
 
 
