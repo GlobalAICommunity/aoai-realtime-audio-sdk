@@ -89,7 +89,7 @@ export interface InputAudioTranscription {
 
 export interface AvatarConfigVideoParams {
   bitrate?: number;
-  codec: "h264";
+  codec?: string;
   crop?: {
     bottom_right: [number, number];
     top_left: [number, number];
@@ -109,6 +109,7 @@ export interface AvatarConfig {
   character: string;
   style?: string;
   customized?: boolean;
+  image_prompt_url?: URL;
   video?: AvatarConfigVideoParams;
 }
 
