@@ -47,7 +47,7 @@ TurnDetection = Annotated[Union[NoTurnDetection, ServerVAD, SemanticVAD], Field(
 
 class FunctionToolChoice(ModelWithDefaults):
     type: Literal["function"] = "function"
-    function: str
+    name: str
 
 
 ToolChoice = Literal["auto", "none", "required"] | FunctionToolChoice
