@@ -81,7 +81,7 @@ export type ToolChoice = "auto" | "none" | "required" | FunctionToolChoice;
 export type MessageRole = "system" | "assistant" | "user";
 
 export interface InputAudioTranscription {
-  model: "whisper-1" | "gpt-4o-transcribe" | "gpt-4o-mini-transcribe" | "azure-fast-transcription";
+  model: "whisper-1" | "gpt-4o-transcribe" | "gpt-4o-mini-transcribe" | "azure-fast-transcription" | "azure-speech";
   language?: string;
   prompt?: string;
   phrase_list?: string[];
