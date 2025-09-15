@@ -85,6 +85,7 @@ export interface InputAudioTranscription {
   language?: string;
   prompt?: string;
   phrase_list?: string[];
+  custom_speech?: Record<string, string>;
 }
 
 export interface AvatarConfigVideoParams {
