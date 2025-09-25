@@ -24,6 +24,18 @@ export type AzureCustomVoice = {
   volume?: string;
   style?: string;
 }
+export type AzurePersonalVoice = {
+  type: "azure-personal";
+  name: string;
+  model: string;
+  temperature?: number;
+  custom_lexicon_url?: string;
+  prefer_locales?: string[];
+  pitch?: string;
+  rate?: string;
+  volume?: string;
+  style?: string;
+}
 export type Voice =
   | 'alloy'
   | 'ash'
@@ -37,7 +49,8 @@ export type Voice =
   | 'shimmer'
   | 'verse'
   | AzureStandardVoice
-  | AzureCustomVoice;
+  | AzureCustomVoice
+  | AzurePersonalVoice;
 export type AudioFormat = "pcm16" | "g711-ulaw" | "g711-alaw";
 export type Modality = "text" | "audio";
 
