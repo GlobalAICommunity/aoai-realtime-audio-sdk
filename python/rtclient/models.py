@@ -444,6 +444,19 @@ class ItemInputAudioTranscriptionDeltaMessage(ServerMessageBase):
     delta: str
 
 
+class ItemInputAudioTranscriptionSegmentMessage(ServerMessageBase):
+    type: Literal["conversation.item.input_audio_transcription.segment"] = (
+        "conversation.item.input_audio_transcription.segment"
+    )
+    item_id: str
+    content_index: int
+    text: str
+    id: str
+    speaker: str
+    start: float
+    end: float
+
+
 class ItemInputAudioTranscriptionCompletedMessage(ServerMessageBase):
     type: Literal["conversation.item.input_audio_transcription.completed"] = (
         "conversation.item.input_audio_transcription.completed"
@@ -689,6 +702,7 @@ ServerMessageType = Annotated[
         ItemTruncatedMessage,
         ItemDeletedMessage,
         ItemInputAudioTranscriptionDeltaMessage,
+        ItemInputAudioTranscriptionSegmentMessage,
         ItemInputAudioTranscriptionCompletedMessage,
         ItemInputAudioTranscriptionFailedMessage,
         ResponseCreatedMessage,
@@ -739,6 +753,8 @@ def create_message_from_dict(data: dict) -> ServerMessageType:
             return ItemDeletedMessage(**data)
         case "conversation.item.input_audio_transcription.delta":
             return ItemInputAudioTranscriptionDeltaMessage(**data)
+        case "conversation.item.input_audio_transcription.segment":
+            return ItemInputAudioTranscriptionSegmentMessage(**data)
         case "conversation.item.input_audio_transcription.completed":
             return ItemInputAudioTranscriptionCompletedMessage(**data)
         case "conversation.item.input_audio_transcription.failed":
