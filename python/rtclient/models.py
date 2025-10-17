@@ -56,7 +56,7 @@ MessageRole = Literal["system", "assistant", "user"]
 
 
 class InputAudioTranscription(BaseModel):
-    model: Literal["whisper-1", "gpt-4o-transcribe", "gpt-4o-mini-transcribe"]
+    model: Literal["whisper-1", "gpt-4o-transcribe", "gpt-4o-mini-transcribe", "gpt-4o-transcribe-diarize"]
     language: Optional[str] = None
     prompt: Optional[str] = None
 
