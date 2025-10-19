@@ -149,6 +149,11 @@ class InputAudioContentPart(ModelWithDefaults):
     audio: str
     transcript: Optional[str] = None
 
+class InputImageContentPart(ModelWithDefaults):
+    type: Literal["input_image"] = "input_image"
+    image_url: str
+    detail: Literal["auto", "high"] = "auto"
+
 
 class OutputTextContentPart(ModelWithDefaults):
     type: Literal["text"] = "text"
@@ -156,7 +161,7 @@ class OutputTextContentPart(ModelWithDefaults):
 
 
 SystemContentPart = InputTextContentPart
-UserContentPart = Union[Annotated[Union[InputTextContentPart, InputAudioContentPart], Field(discriminator="type")]]
+UserContentPart = Union[Annotated[Union[InputTextContentPart, InputAudioContentPart, InputImageContentPart], Field(discriminator="type")]]
 AssistantContentPart = OutputTextContentPart
 
 ItemParamStatus = Literal["completed", "incomplete"]
@@ -360,6 +365,12 @@ class ResponseItemInputAudioContentPart(BaseModel):
     transcript: Optional[str]
 
 
+class ResponseItemInputImageContentPart(BaseModel):
+    type: Literal["input_image"] = "input_image"
+    image_url: str | None = None
+    detail: Literal["auto", "high"] = "auto"
+
+
 class ResponseItemTextContentPart(BaseModel):
     type: Literal["text", "output_text"] = "text"
     text: str
@@ -374,6 +385,7 @@ ResponseItemContentPart = Annotated[
     Union[
         ResponseItemInputTextContentPart,
         ResponseItemInputAudioContentPart,
+        ResponseItemInputImageContentPart,
         ResponseItemTextContentPart,
         ResponseItemAudioContentPart,
     ],
@@ -502,12 +514,14 @@ ResponseStatusDetails = Annotated[
 class CachedTokenDetails(BaseModel):
     text_tokens: int | None = None
     audio_tokens: int | None = None
+    image_tokens: int = 0
 
 
 class InputTokenDetails(BaseModel):
     cached_tokens: int
     text_tokens: int
     audio_tokens: int
+    image_tokens: int = 0
     cached_tokens_details: CachedTokenDetails | None = None
 
 
