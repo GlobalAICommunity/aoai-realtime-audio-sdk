@@ -61,6 +61,10 @@ class InputAudioTranscription(BaseModel):
     prompt: Optional[str] = None
 
 
+class InputAudioNoiseReduction(BaseModel):
+    type: Literal["near_field", "far_field"]
+
+
 class ClientMessageBase(ModelWithDefaults):
     _is_azure: bool = False
     event_id: Optional[str] = None
@@ -80,6 +84,7 @@ class SessionUpdateParams(BaseModel):
     input_audio_format: Optional[AudioFormat] = None
     output_audio_format: Optional[AudioFormat] = None
     input_audio_transcription: Optional[InputAudioTranscription] = None
+    input_audio_noise_reduction: Optional[InputAudioNoiseReduction] = None
     turn_detection: Optional[TurnDetection] = None
     tools: Optional[ToolsDefinition] = None
     tool_choice: Optional[ToolChoice] = None
@@ -291,6 +296,7 @@ class Session(BaseModel):
     input_audio_format: AudioFormat
     output_audio_format: AudioFormat
     input_audio_transcription: Optional[InputAudioTranscription]
+    input_audio_noise_reduction: Optional[InputAudioNoiseReduction]
     turn_detection: Optional[TurnDetection]
     tools: ToolsDefinition
     tool_choice: ToolChoice
