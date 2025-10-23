@@ -27,7 +27,7 @@ export type AzureCustomVoice = {
 export type AzurePersonalVoice = {
   type: "azure-personal";
   name: string;
-  model: "DragonLatestNeural" | "DragonV2.1Neural" | "PhoenixLatestNeural" | "PhoenixV2Neural";
+  model: "DragonLatestNeural" | "DragonHDOmniLatestNeural" | string;
   temperature?: number;
   custom_lexicon_url?: string;
   prefer_locales?: string[];
@@ -48,6 +48,8 @@ export type Voice =
   | 'sage'
   | 'shimmer'
   | 'verse'
+  | 'marin'
+  | 'cedar'
   | AzureStandardVoice
   | AzureCustomVoice
   | AzurePersonalVoice;
