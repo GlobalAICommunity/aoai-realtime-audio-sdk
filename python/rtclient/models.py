@@ -303,7 +303,7 @@ class Session(BaseModel):
     tool_choice: ToolChoice
     temperature: Temperature
     max_response_output_tokens: Optional[MaxTokensType]
-    idle_timeout: Optional[int]
+    idle_timeout: Optional[int] = None
 
 
 class SessionCreatedMessage(ServerMessageBase):
