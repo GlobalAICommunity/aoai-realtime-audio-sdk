@@ -71,6 +71,7 @@ class SessionUpdateParams(BaseModel):
     tool_choice: Optional[ToolChoice] = None
     temperature: Optional[Temperature] = None
     max_response_output_tokens: Optional[MaxTokensType] = None
+    idle_timeout: Optional[int] = None
 
 
 class SessionUpdateMessage(ClientMessageBase):
@@ -272,6 +273,7 @@ class Session(BaseModel):
     tool_choice: ToolChoice
     temperature: Temperature
     max_response_output_tokens: Optional[MaxTokensType]
+    idle_timeout: Optional[int]
 
 
 class SessionCreatedMessage(ServerMessageBase):

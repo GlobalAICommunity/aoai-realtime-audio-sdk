@@ -611,6 +611,7 @@ class RTClient:
         tool_choice: Optional[ToolChoice] = None,
         temperature: Optional[Temperature] = None,
         max_response_output_tokens: Optional[int] = None,
+        idle_timeout: Optional[int] = None,
     ) -> Session:
         session_update_params = SessionUpdateParams()
         if model is not None:
@@ -637,6 +638,8 @@ class RTClient:
             session_update_params.temperature = temperature
         if max_response_output_tokens is not None:
             session_update_params.max_response_output_tokens = max_response_output_tokens
+        if idle_timeout is not None:
+            session_update_params.idle_timeout = idle_timeout
         await self._client.send(SessionUpdateMessage(session=session_update_params))
 
         message = await self._message_queue.receive(lambda m: m.type == "session.updated")
