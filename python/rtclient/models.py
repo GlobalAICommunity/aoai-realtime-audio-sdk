@@ -161,7 +161,7 @@ class InputImageContentPart(ModelWithDefaults):
 
 
 class OutputTextContentPart(ModelWithDefaults):
-    type: Literal["text"] = "text"
+    type: Literal["text", "output_text"] = "text"
     text: str
 
 
