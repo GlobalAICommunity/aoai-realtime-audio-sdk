@@ -33,6 +33,7 @@ class ServerVAD(ModelWithDefaults):
     silence_duration_ms: Optional[int] = None
     create_response: bool = True
     interrupt_response: bool = True
+    idle_timeout_ms: Optional[int] = None
 
 
 class SemanticVAD(ModelWithDefaults):
@@ -158,7 +159,7 @@ class InputAudioContentPart(ModelWithDefaults):
 class InputImageContentPart(ModelWithDefaults):
     type: Literal["input_image"] = "input_image"
     image_url: str
-    detail: Literal["auto", "high"] = "auto"
+    detail: Literal["auto", "low", "high"] = "auto"
 
 
 class OutputTextContentPart(ModelWithDefaults):
@@ -303,7 +304,6 @@ class Session(BaseModel):
     tool_choice: ToolChoice
     temperature: Temperature
     max_response_output_tokens: Optional[MaxTokensType]
-    idle_timeout: Optional[int] = None
 
 
 class SessionCreatedMessage(ServerMessageBase):
