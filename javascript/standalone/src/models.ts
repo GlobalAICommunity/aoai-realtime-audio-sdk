@@ -122,6 +122,8 @@ export interface AvatarConfigVideoParams {
 
 export interface AvatarConfig {
   ice_servers?: RTCIceServer[];
+  type?:string;
+  model?:string;
   character: string;
   style?: string;
   customized?: boolean;
