@@ -43,7 +43,13 @@ export interface ClientMessageBase {
   event_id?: string;
 }
 
-export type ToolsDefinition = Record<string, any>[];
+export interface ToolsDefinition {
+  type: string;
+  server_label: string;
+  server_url: string;
+  authorization: string;
+  require_approval: string;
+}
 
 export interface SessionUpdateParams {
   model?: string;
