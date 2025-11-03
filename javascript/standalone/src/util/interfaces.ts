@@ -25,11 +25,11 @@ export interface RTAzureOpenAIOptions {
 }
 
 export interface AzureAgentConfig {
-  agentId: string;
+  agentId?: string;
+  agentName?: string;
   projectName?: string;
   agentConnectionString?: string;
   agentAuthenticationIdentityClientId?: string;
-  agentAccessToken?: string;
   threadId?: string;
 }
 

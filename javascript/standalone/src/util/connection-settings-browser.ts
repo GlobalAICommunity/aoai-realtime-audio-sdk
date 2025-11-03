@@ -93,7 +93,12 @@ export function voiceLiveSettings(
   if (typeof options.modelOrAgent === "string") {
     uri.searchParams.set("model", options.modelOrAgent);
   } else {
-    uri.searchParams.set("agent_id", options.modelOrAgent.agentId);
+    if (options.modelOrAgent.agentName) {
+      uri.searchParams.set("agent-name", options.modelOrAgent.agentName);
+    }
+    if (options.modelOrAgent.agentId) {
+      uri.searchParams.set("agent-id", options.modelOrAgent.agentId);
+    }
     if (options.modelOrAgent.projectName) {
       uri.searchParams.set("agent-project-name", options.modelOrAgent.projectName);
     }
@@ -107,12 +112,6 @@ export function voiceLiveSettings(
       uri.searchParams.set(
         "agent_authentication_identity_client_id",
         options.modelOrAgent.agentAuthenticationIdentityClientId,
-      );
-    }
-    if (options.modelOrAgent.agentAccessToken) {
-      uri.searchParams.set(
-        "agent_access_token",
-        options.modelOrAgent.agentAccessToken,
       );
     }
     if (options.modelOrAgent.threadId) {
